@@ -9,6 +9,7 @@ const AdminPage = () => {
     fetchFeedback();
   }, []);
 
+  // ✅ Fetch All Feedback (Admin Only)
   const fetchFeedback = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -17,10 +18,11 @@ const AdminPage = () => {
       });
       setFeedbacks(response.data);
     } catch (err) {
-      setError("Error fetching feedback");
+      setError("Error fetching feedback.");
     }
   };
 
+  // ✅ Handle Delete Feedback
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this feedback?")) {
       return;
@@ -31,9 +33,11 @@ const AdminPage = () => {
       await axios.delete(`http://localhost:5000/api/feedback/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      fetchFeedback();
+
+      // ✅ Update UI after deletion
+      setFeedbacks(feedbacks.filter((feedback) => feedback._id !== id));
     } catch (err) {
-      setError("Error deleting feedback");
+      setError("Error deleting feedback.");
     }
   };
 
@@ -41,6 +45,7 @@ const AdminPage = () => {
     <div className="container mt-4">
       <h2>Admin - Manage Feedback</h2>
       {error && <p className="text-danger">{error}</p>}
+
       <table className="table table-bordered mt-3">
         <thead className="table-dark">
           <tr>

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("user"); // ✅ Default to user
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -21,9 +22,11 @@ const Login = () => {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data));
 
-      // ✅ Redirect based on role
-      if (response.data.isAdmin) {
+      // ✅ Check user type & redirect accordingly
+      if (role === "admin" && response.data.isAdmin) {
         navigate("/admin");
+      } else if (role === "admin" && !response.data.isAdmin) {
+        setError("You are not an admin.");
       } else {
         navigate("/my-feedback");
       }
@@ -58,6 +61,14 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+        </div>
+        {/* ✅ Role Selection Dropdown */}
+        <div className="mb-3">
+          <label className="form-label">Login As</label>
+          <select className="form-select" value={role} onChange={(e) => setRole(e.target.value)}>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
         </div>
         <button type="submit" className="btn btn-primary" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
