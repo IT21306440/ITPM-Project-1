@@ -5,17 +5,35 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("user"); // ✅ Default to user
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
+
     try {
       const response = await axios.post("http://localhost:5000/api/users/login", { email, password });
+
+      // ✅ Store user data in localStorage
       localStorage.setItem("token", response.data.token);
-      navigate("/"); // Redirect to homepage after login
+      localStorage.setItem("user", JSON.stringify(response.data));
+
+      // ✅ Check user type & redirect accordingly
+      if (role === "admin" && response.data.isAdmin) {
+        navigate("/admin");
+      } else if (role === "admin" && !response.data.isAdmin) {
+        setError("You are not an admin.");
+      } else {
+        navigate("/my-feedback");
+      }
     } catch (err) {
-      setError("Invalid credentials");
+      setError("Invalid email or password.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,7 +62,17 @@ const Login = () => {
             required
           />
         </div>
-        <button type="submit" className="btn btn-success">Login</button>
+        {/* ✅ Role Selection Dropdown */}
+        <div className="mb-3">
+          <label className="form-label">Login As</label>
+          <select className="form-select" value={role} onChange={(e) => setRole(e.target.value)}>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <button type="submit" className="btn btn-primary" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
       </form>
     </div>
   );

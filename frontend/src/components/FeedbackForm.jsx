@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // ✅ Import useNavigate
 
-const FeedbackForm = ({ onFeedbackSubmitted }) => {
+const FeedbackForm = () => {
   const [rating, setRating] = useState("");
   const [comment, setComment] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate(); // ✅ Initialize navigate
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");  // ✅ Clear any previous errors
-    setSuccess(""); // ✅ Clear success message before new submission
+    setError("");
     setLoading(true);
 
     if (!rating || !comment) {
@@ -36,12 +36,12 @@ const FeedbackForm = ({ onFeedbackSubmitted }) => {
 
       setRating("");
       setComment("");
-      setSuccess("Feedback submitted successfully!");
       setLoading(false);
-      onFeedbackSubmitted();
+
+      // ✅ Navigate to "My Feedback" after successful submission
+      navigate("/my-feedback");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to submit feedback.");
-      setSuccess(""); // ✅ Ensure success message is cleared on error
       setLoading(false);
     }
   };
@@ -50,7 +50,6 @@ const FeedbackForm = ({ onFeedbackSubmitted }) => {
     <div className="container mt-4">
       <h2>Submit Feedback</h2>
       {error && <p className="text-danger">{error}</p>}
-      {success && <p className="text-success">{success}</p>}
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label className="form-label">Rating (1-5)</label>

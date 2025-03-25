@@ -24,6 +24,7 @@ const registerUser = async (req, res) => {
       res.status(201).json({
         _id: user.id,
         email: user.email,
+        isAdmin: user.isAdmin, // ✅ Ensure isAdmin is included
         token: generateToken(user.id),
       });
     } else {
@@ -45,6 +46,7 @@ const loginUser = async (req, res) => {
       res.json({
         _id: user.id,
         email: user.email,
+        isAdmin: user.isAdmin, // ✅ Ensure isAdmin is included in response
         token: generateToken(user.id),
       });
     } else {
