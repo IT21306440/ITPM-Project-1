@@ -6,17 +6,19 @@ import AdminPage from "./pages/AdminPage";
 import UserFeedback from "./pages/UserFeedback";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import ReportPage from "./pages/ReportPage"; // ✅ Import Report Page
 
-const AppContent = () => {  
+const AppContent = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
 
+  // ✅ Check User Authentication
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       setIsLoggedIn(true);
-      
+
       // ✅ Ensure localStorage user data exists before parsing
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
@@ -26,6 +28,7 @@ const AppContent = () => {
     }
   }, []);
 
+  // ✅ Handle Logout
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -36,7 +39,7 @@ const AppContent = () => {
 
   return (
     <>
-      {/* Navigation Bar */}
+      {/* ✅ Navigation Bar */}
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container">
           <Link className="navbar-brand" to="/">Feedback System</Link>
@@ -50,6 +53,7 @@ const AppContent = () => {
               <>
                 <Link className="nav-link" to="/my-feedback">My Feedback</Link>
                 {isAdmin && <Link className="nav-link" to="/admin">Admin Panel</Link>}
+                {isAdmin && <Link className="nav-link" to="/report">View Reports</Link>} {/* ✅ New Report Page */}
                 <button className="btn btn-danger ms-2" onClick={handleLogout}>Logout</button>
               </>
             )}
@@ -57,12 +61,13 @@ const AppContent = () => {
         </div>
       </nav>
 
-      {/* Routes */}
+      {/* ✅ Routes */}
       <Routes>
         <Route path="/" element={<FeedbackForm />} />
         <Route path="/feedback" element={<FeedbackList />} />
         <Route path="/my-feedback" element={<UserFeedback />} />
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/report" element={<ReportPage />} /> {/* ✅ New Route for Reports */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
       </Routes>
@@ -70,6 +75,7 @@ const AppContent = () => {
   );
 };
 
+// ✅ Wrap App Inside Router
 function App() {
   return (
     <Router>
