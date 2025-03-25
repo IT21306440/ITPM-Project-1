@@ -6,16 +6,31 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
+
     try {
       const response = await axios.post("http://localhost:5000/api/users/login", { email, password });
+
+      // ✅ Store user data in localStorage
       localStorage.setItem("token", response.data.token);
-      navigate("/"); // Redirect to homepage after login
+      localStorage.setItem("user", JSON.stringify(response.data));
+
+      // ✅ Redirect based on role
+      if (response.data.isAdmin) {
+        navigate("/admin");
+      } else {
+        navigate("/my-feedback");
+      }
     } catch (err) {
-      setError("Invalid credentials");
+      setError("Invalid email or password.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,7 +59,9 @@ const Login = () => {
             required
           />
         </div>
-        <button type="submit" className="btn btn-success">Login</button>
+        <button type="submit" className="btn btn-primary" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
       </form>
     </div>
   );

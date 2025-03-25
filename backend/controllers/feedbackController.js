@@ -6,7 +6,7 @@ const submitFeedback = async (req, res) => {
 
   try {
     const feedback = await Feedback.create({
-      user: req.user._id,
+      user: req.user._id, // Store the user ID
       rating,
       comment,
     });
@@ -17,10 +17,20 @@ const submitFeedback = async (req, res) => {
   }
 };
 
-// Get All Feedback
+// Get All Feedback (Admin View) - Shows User Details
 const getAllFeedback = async (req, res) => {
   try {
-    const feedbacks = await Feedback.find().populate("user", "email");
+    const feedbacks = await Feedback.find().populate("user", "email"); // Populate user email
+    res.status(200).json(feedbacks);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Get Logged-in User's Feedback (User View)
+const getUserFeedback = async (req, res) => {
+  try {
+    const feedbacks = await Feedback.find({ user: req.user._id });
     res.status(200).json(feedbacks);
   } catch (error) {
     res.status(500).json({ message: "Server error" });
@@ -77,5 +87,11 @@ const deleteFeedback = async (req, res) => {
   }
 };
 
-// Ensure Proper Export
-module.exports = { submitFeedback, getAllFeedback, updateFeedback, deleteFeedback };
+// Export Functions
+module.exports = {
+  submitFeedback,
+  getAllFeedback,
+  getUserFeedback,
+  updateFeedback,
+  deleteFeedback,
+};
