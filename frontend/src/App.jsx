@@ -11,7 +11,7 @@ import ReportPage from "./pages/ReportPage"; // ✅ Import Report Page
 const AppContent = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const isUser = !isLoggedIn && !isAdmin;
+  const isUser = isLoggedIn && !isAdmin;
   const navigate = useNavigate();
 
   // ✅ Check User Authentication
@@ -64,7 +64,7 @@ const AppContent = () => {
 
       {/* ✅ Routes */}
       <Routes>
-        <Route path="/" element={<UserFeedback />} />
+        <Route path="/" element={<Login />} />
         <Route path="/feedbackform" element={<FeedbackForm />} />
         <Route path="/feedback" element={<FeedbackList />} />
         <Route path="/my-feedback" element={<UserFeedback />} />
