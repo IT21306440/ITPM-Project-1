@@ -98,6 +98,7 @@ const UserFeedback = () => {
             <tr>
               <th>Rating</th>
               <th>Comment</th>
+              <th>Created At</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -117,6 +118,7 @@ const UserFeedback = () => {
                       feedback.comment
                     )}
                   </td>
+                  <td>{new Date(feedback.createdAt).toLocaleString()}</td>
                   <td className="text-center">
                     {editingFeedback === feedback._id ? (
                       <button
@@ -141,7 +143,7 @@ const UserFeedback = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="3" className="text-center">No feedback available</td>
+                <td colSpan="4" className="text-center">No feedback available</td>
               </tr>
             )}
           </tbody>

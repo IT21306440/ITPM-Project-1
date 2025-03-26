@@ -11,7 +11,7 @@ import ReportPage from "./pages/ReportPage"; // ✅ Import Report Page
 const AppContent = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const isUser = isLoggedIn && !isAdmin;
+  const isUser = !isLoggedIn && !isAdmin;
   const navigate = useNavigate();
 
   // ✅ Check User Authentication
