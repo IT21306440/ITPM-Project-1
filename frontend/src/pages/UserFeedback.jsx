@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FaEdit } from "react-icons/fa";
 import FeedbackForm from "../components/FeedbackForm";
-// import "../pages/UserFeedback.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
+import { Modal } from "bootstrap";
 
 const UserFeedback = () => {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -10,7 +12,6 @@ const UserFeedback = () => {
   const [updatedComment, setUpdatedComment] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [showFeedbackForm, setShowFeedbackForm] = useState(false);
 
   useEffect(() => {
     fetchUserFeedback();
@@ -54,41 +55,43 @@ const UserFeedback = () => {
     }
   };
 
-  return (
-    <div className="container-fluid mt-4 p-4 bg-gray-100 rounded-lg shadow-lg">
-      {showFeedbackForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md relative">
-            <button
-              className="absolute top-2 right-2 text-xl text-gray-500 hover:text-gray-700"
-              onClick={() => setShowFeedbackForm(false)}
-            >
-              &times;
-            </button>
-            <FeedbackForm 
-              onSuccess={() => {
-                setShowFeedbackForm(false);
-                fetchUserFeedback();
-              }}
-            />
-          </div>
-        </div>
-      )}
+  const handleShowModal = () => {
+    const modal = new Modal(document.getElementById("feedbackModal"));
+    modal.show();
+  };
 
+  const handleFeedbackSuccess = async () => {
+    await fetchUserFeedback(); // Ensure the latest data is fetched
+    const modal = Modal.getInstance(document.getElementById("feedbackModal"));
+    if (modal) modal.hide();
+  };
+
+  return (
+    <div className="container mt-4 p-4 bg-light rounded shadow">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="text-2xl font-bold text-gray-800">User Feedback</h2>
-        <button 
-          className="btn btn-success"
-          onClick={() => setShowFeedbackForm(true)}
-        >
+        <h2 className="text-dark">User Feedback</h2>
+        <button className="btn btn-success" onClick={handleShowModal}>
           + Add Feedback
         </button>
+      </div>
+
+      <div className="modal fade" id="feedbackModal" tabIndex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header bg-primary text-white">
+              <h5 className="modal-title" id="feedbackModalLabel">Submit Feedback</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div className="modal-body">
+              <FeedbackForm onSuccess={handleFeedbackSuccess} />
+            </div>
+          </div>
+        </div>
       </div>
 
       {error && <p className="text-danger">{error}</p>}
       {success && <p className="text-success">{success}</p>}
 
-      {/* ✅ Full-Width Table */}
       <div className="table-responsive">
         <table className="table table-bordered">
           <thead className="table-dark">
@@ -138,7 +141,7 @@ const UserFeedback = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="4" className="text-center">No feedback available</td>
+                <td colSpan="3" className="text-center">No feedback available</td>
               </tr>
             )}
           </tbody>

@@ -92,6 +92,13 @@ const ReportPage = () => {
   return (
     <div className="container mt-4">
       <h2>📊 Feedback Report</h2>
+      {/* ✅ PDF Generation Button */}
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <button className="btn btn-success mt-3" onClick={generatePDF}>
+          📄 Generate PDF Report
+        </button>
+      </div>
+      <br></br>
       {error && <p className="text-danger">{error}</p>}
       {!report ? (
         <p>Loading...</p>
@@ -163,11 +170,6 @@ const ReportPage = () => {
               <p>No attendee feedback available.</p>
             )}
           </div>
-
-          {/* ✅ PDF Generation Button */}
-          <button className="btn btn-success mt-3" onClick={generatePDF}>
-            📄 Generate PDF Report
-          </button>
         </>
       )}
     </div>

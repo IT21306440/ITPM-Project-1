@@ -11,6 +11,7 @@ import ReportPage from "./pages/ReportPage"; // ✅ Import Report Page
 const AppContent = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const isUser = isLoggedIn && !isAdmin;
   const navigate = useNavigate();
 
   // ✅ Check User Authentication
@@ -42,7 +43,7 @@ const AppContent = () => {
       {/* ✅ Navigation Bar */}
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container">
-          <Link className="navbar-brand" to="/">Feedback System</Link>
+          <Link className="navbar-brand" >Feedback System</Link>
           <div className="navbar-nav">
             {!isLoggedIn ? (
               <>
@@ -51,7 +52,7 @@ const AppContent = () => {
               </>
             ) : (
               <>
-                <Link className="nav-link" to="/my-feedback">My Feedback</Link>
+                {isUser &&<Link className="nav-link" to="/my-feedback">My Feedback</Link>}
                 {isAdmin && <Link className="nav-link" to="/admin">Admin Panel</Link>}
                 {isAdmin && <Link className="nav-link" to="/report">View Reports</Link>} {/* ✅ New Report Page */}
                 <button className="btn btn-danger ms-2" onClick={handleLogout}>Logout</button>
@@ -63,7 +64,8 @@ const AppContent = () => {
 
       {/* ✅ Routes */}
       <Routes>
-        <Route path="/" element={<FeedbackForm />} />
+        <Route path="/" element={<UserFeedback />} />
+        <Route path="/feedbackform" element={<FeedbackForm />} />
         <Route path="/feedback" element={<FeedbackList />} />
         <Route path="/my-feedback" element={<UserFeedback />} />
         <Route path="/admin" element={<AdminPage />} />
