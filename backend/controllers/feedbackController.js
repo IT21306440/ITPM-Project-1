@@ -51,7 +51,7 @@ const updateFeedback = async (req, res) => {
     }
 
     const timeDiff = (new Date() - feedback.createdAt) / (1000 * 60 * 60);
-    if (timeDiff > 24) {
+    if (timeDiff > 720) {
       return res.status(403).json({ message: "Editing time expired" });
     }
 
